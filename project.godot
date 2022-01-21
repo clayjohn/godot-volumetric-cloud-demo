@@ -1,0 +1,32 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Godot-Volumetric-Cloud-Demo"
+config/description="A short educational sample showing one way of using sky shaders to render real time volumetric cloudscapes"
+run/main_scene="res://Main.tscn"
+config/icon="res://icon.png"
+config/features=PackedStringArray("4.0")
+
+[debug]
+
+settings/stdout/print_fps=true
+
+[display]
+
+window/vsync/use_vsync=false
+
+[rendering]
+
+vram_compression/import_etc2=false
+quality/screen_filters/msaa=2
+quality/screen_filters/screen_space_aa=1
+quality/screen_filters/screen_space_roughness_limiter=1

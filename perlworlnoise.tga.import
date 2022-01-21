@@ -1,0 +1,28 @@
+[remap]
+
+importer="3d_texture"
+type="StreamTexture3D"
+uid="uid://capq7reqro17i"
+path.s3tc="res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.s3tc.stex3d"
+path.etc2="res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.etc2.stex3d"
+metadata={
+"imported_formats": ["s3tc", "etc2"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://perlworlnoise.tga"
+dest_files=["res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.s3tc.stex3d", "res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.etc2.stex3d"]
+
+[params]
+
+compress/mode=2
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/bptc_ldr=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+slices/horizontal=128
+slices/vertical=1
