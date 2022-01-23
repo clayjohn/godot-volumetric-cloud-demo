@@ -9,6 +9,8 @@
 shader = ExtResource( "1" )
 shader_param/_density = 0.05
 shader_param/cloud_coverage = 0.25
+shader_param/_time_scale = 1.0
+shader_param/_time_offset = 0.0
 shader_param/rayleigh = 2.0
 shader_param/rayleigh_color = Color(0.26, 0.41, 0.58, 1)
 shader_param/mie = 0.005
