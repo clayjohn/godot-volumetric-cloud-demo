@@ -18,14 +18,14 @@ const float sky_b_radius = 6001500.0;//bottom of cloud layer
 const float sky_t_radius = 6004000.0;//top of cloud layer
 
 uniform float rayleigh : hint_range(0, 64) = 2.0;
-uniform vec4 rayleigh_color : hint_color = vec4(0.26, 0.41, 0.58, 1.0);
+uniform vec4 rayleigh_color : source_color = vec4(0.26, 0.41, 0.58, 1.0);
 uniform float mie : hint_range(0, 1) = 0.005;
 uniform float mie_eccentricity : hint_range(-1, 1) = 0.8;
-uniform vec4 mie_color : hint_color = vec4(0.63, 0.77, 0.92, 1.0);
+uniform vec4 mie_color : source_color = vec4(0.63, 0.77, 0.92, 1.0);
 
 uniform float turbidity : hint_range(0, 1000) = 10.0;
 uniform float sun_disk_scale : hint_range(0, 360) = 1.0;
-uniform vec4 ground_color : hint_color = vec4(1.0);
+uniform vec4 ground_color : source_color = vec4(1.0);
 uniform float exposure : hint_range(0, 128) = 0.1;
 
 const vec3 UP = vec3( 0.0, 1.0, 0.0 );

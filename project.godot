@@ -13,8 +13,8 @@ config_version=5
 config/name="Godot-Volumetric-Cloud-Demo"
 config/description="A short educational sample showing one way of using sky shaders to render real time volumetric cloudscapes"
 run/main_scene="res://Main.tscn"
-config/icon="res://icon.png"
 config/features=PackedStringArray("4.0")
+config/icon="res://icon.png"
 
 [debug]
 
