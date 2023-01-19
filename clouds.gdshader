@@ -139,7 +139,7 @@ float intersectSphere(vec3 pos, vec3 dir,float r) {
 // Returns density at a given point
 // Heavily based on method from Schneider
 float density(vec3 pip, vec3 weather, float mip) {
-	float time = mod(TIME, 100.0);
+	float time = TIME;
 	vec3 p = pip;
 	p.x += time * 10.0 * _time_scale + _time_offset;
 	float height_fraction = GetHeightFractionForPoint(length(p));
@@ -181,7 +181,7 @@ vec4 march(vec3 pos,  vec3 end, vec3 dir, int depth) {
 	vec3 atmosphere_ground = atmosphere(normalize(vec3(1.0, -1.0, 0.0)));
 	
 	const float weather_scale = 0.00006;
-	const float time = mod(TIME, 100.0) * 0.003 * _time_scale + 0.005*_time_offset;
+	const float time = TIME * 0.003 * _time_scale + 0.005*_time_offset;
 	const vec2 weather_pos = vec2(time * 0.9, time);
 	
 	for (int i = 0; i < depth; i++) {
