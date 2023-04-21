@@ -45,7 +45,7 @@ float hash(vec3 p) {
 	return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
 }
 
-// Utility function that maps a value from one range to another. 
+// Utility function that maps a value from one range to another.
 float remap(float originalValue,  float originalMin,  float originalMax,  float newMin,  float newMax) {
 	return newMin + (((originalValue - originalMin) / (originalMax - originalMin)) * (newMax - newMin));
 }
@@ -106,8 +106,8 @@ vec3 atmosphere(vec3 eye_dir) {
 	return color;
 }
 
-float GetHeightFractionForPoint(float inPosition) { 
-	float height_fraction = (inPosition -  sky_b_radius) / (sky_t_radius - sky_b_radius); 
+float GetHeightFractionForPoint(float inPosition) {
+	float height_fraction = (inPosition -  sky_b_radius) / (sky_t_radius - sky_b_radius);
 	return clamp(height_fraction, 0.0, 1.0);
 }
 
@@ -138,7 +138,7 @@ float intersectSphere(vec3 pos, vec3 dir,float r) {
 
 // Returns density at a given point
 // Heavily based on method from Schneider
-float density(vec3 pip, vec3 weather, float mip) {
+float density(vec3 pip, vec3 weather, float mip, bool fast) {
 	float time = TIME;
 	vec3 p = pip;
 	p.x += time * 10.0 * _time_scale + _time_offset;
@@ -150,11 +150,13 @@ float density(vec3 pip, vec3 weather, float mip) {
 	float weather_coverage = cloud_coverage*weather.b;
 	base_cloud = remap(base_cloud*g, 1.0-(weather_coverage), 1.0, 0.0, 1.0);
 	base_cloud *= weather_coverage;
-	p.xy -= time * 40.0;
-	vec3 hn = textureLod(worlnoise, p*0.001, mip).rgb;
-	float hfbm = hn.r*0.625+hn.g*0.25+hn.b*0.125;
-	hfbm = mix(hfbm, 1.0-hfbm, clamp(height_fraction*4.0, 0.0, 1.0));
-	base_cloud = remap(base_cloud, hfbm*0.4 * height_fraction, 1.0, 0.0, 1.0);
+	if (!fast) {
+		p.xy -= time * 40.0;
+		vec3 hn = textureLod(worlnoise, p*0.001, mip).rgb;
+		float hfbm = hn.r*0.625+hn.g*0.25+hn.b*0.125;
+		hfbm = mix(hfbm, 1.0-hfbm, clamp(height_fraction*4.0, 0.0, 1.0));
+		base_cloud = remap(base_cloud, hfbm*0.4 * height_fraction, 1.0, 0.0, 1.0);
+	}
 	return pow(clamp(base_cloud, 0.0, 1.0), (1.0 - height_fraction) * 0.8 + 0.5);
 }
 
@@ -179,40 +181,40 @@ vec4 march(vec3 pos,  vec3 end, vec3 dir, int depth) {
 	vec3 atmosphere_sun = atmosphere(LIGHT0_DIRECTION) * LIGHT0_ENERGY * ss * 0.1;
 	vec3 atmosphere_ambient = atmosphere(normalize(vec3(1.0, 1.0, 0.0)));
 	vec3 atmosphere_ground = atmosphere(normalize(vec3(1.0, -1.0, 0.0)));
-	
+
 	const float weather_scale = 0.00006;
 	float time = TIME * 0.003 * _time_scale + 0.005*_time_offset;
 	vec2 weather_pos = vec2(time * 0.9, time);
-	
+
 	for (int i = 0; i < depth; i++) {
 		p += dir * ss;
 		vec3 weather_sample = texture(weathermap, p.xz * weather_scale + 0.5 + weather_pos).xyz;
 		float height_fraction = GetHeightFractionForPoint(length(p));
 
-		t = density(p, weather_sample, 0.0);
-		float dt = exp(-_density*t*ss);
-		T *= dt;
-		vec3 lp = p;
-		float lt = 1.0;
-		float cd = 0.0;
+		t = density(p, weather_sample, 0.0, false);
 
 		if (t > 0.0) { //calculate lighting, but only when we are in the cloud
+			float dt = exp(-_density*t*ss);
+			T *= dt;
+			vec3 lp = p;
+			float lt = 1.0;
+			float cd = 0.0;
 			float lheight_fraction = 0.0;
 			for (int j = 0; j < 6; j++) {
 				lp += (ldir + RANDOM_VECTORS[j]*float(j))*lss;
 				lheight_fraction = GetHeightFractionForPoint(length(lp));
 				vec3 lweather = texture(weathermap, lp.xz * weather_scale + 0.5 + weather_pos).xyz;
-				lt = density(lp, lweather, float(j));
+				lt = density(lp, lweather, float(j), true);
 				cd += lt;
 			}
-			
+
 			// Take a single distant sample
 			lp = p + ldir * 18.0 * lss;
 			lheight_fraction = GetHeightFractionForPoint(length(lp));
 			vec3 lweather = texture(weathermap, lp.xz * weather_scale + 0.5).xyz;
-			lt = pow(density(lp, lweather, 5.0), (1.0 - lheight_fraction) * 0.8 + 0.5);
+			lt = pow(density(lp, lweather, 5.0, true), (1.0 - lheight_fraction) * 0.8 + 0.5);
 			cd += lt;
-			
+
 			// captures the direct lighting from the sun
 			float beers = exp(-_density * cd * lss);
 			float beers2 = exp(-_density * cd * lss * 0.25) * 0.7;
@@ -221,6 +223,9 @@ vec4 march(vec3 pos,  vec3 end, vec3 dir, int depth) {
 			vec3 ambient = mix(atmosphere_ground, vec3(1.0), smoothstep(0.0, 1.0, height_fraction)) * _density * mix(atmosphere_ambient, vec3(1.0), 0.4) * (LIGHT0_DIRECTION.y);
 			alpha += (1.0 - dt) * (1.0 - alpha);
 			L += (ambient + beers_total * atmosphere_sun * phase * alpha) * T * t;
+		}
+		if (alpha >= 1.0) {
+			break;
 		}
 	}
 	return clamp(vec4(L, alpha), 0.0, 1.0);
@@ -243,11 +248,11 @@ void sky() {
 		// Draw cloud shape
 		col = vec4(background*(1.0-volume.a)+volume.xyz, 1.0);
 		// Blend distant clouds into the sky
-		col.xyz = mix(clamp(col.xyz, vec3(0.0), vec3(1.0)), clamp(background, vec3(0.0), vec3(1.0)), smoothstep(0.6, 1.0, 1.0-dir.y));
+		col.xyz = mix(col.xyz, clamp(background, vec3(0.0), vec3(1.0)), smoothstep(0.6, 1.0, 1.0-dir.y));
 	} else {
 		col = vec4(atmosphere(dir), 1.0);
 	}
-	
+
 	// Draw to quarter res buffer for reflections
 	// Draw to half res buffer for main sky
 	if (AT_QUARTER_RES_PASS && AT_CUBEMAP_PASS) {

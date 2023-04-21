@@ -7,22 +7,22 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jcxn0"]
 shader = ExtResource("1")
-shader_param/_density = 0.05
-shader_param/_time_offset = 0.0
-shader_param/_time_scale = 1.0
-shader_param/cloud_coverage = 0.25
-shader_param/exposure = 0.1
-shader_param/ground_color = Color(1, 1, 1, 1)
-shader_param/mie = 0.005
-shader_param/mie_color = Color(0.63, 0.77, 0.92, 1)
-shader_param/mie_eccentricity = 0.8
-shader_param/perlworlnoise = ExtResource("3")
-shader_param/rayleigh = 2.0
-shader_param/rayleigh_color = Color(0.26, 0.41, 0.58, 1)
-shader_param/sun_disk_scale = 1.0
-shader_param/turbidity = 10.0
-shader_param/weathermap = ExtResource("4")
-shader_param/worlnoise = ExtResource("2")
+shader_parameter/_density = 0.05
+shader_parameter/cloud_coverage = 0.25
+shader_parameter/_time_scale = 1.0
+shader_parameter/_time_offset = 0.0
+shader_parameter/rayleigh = 2.0
+shader_parameter/rayleigh_color = Color(0.26, 0.41, 0.58, 1)
+shader_parameter/mie = 0.005
+shader_parameter/mie_eccentricity = 0.8
+shader_parameter/mie_color = Color(0.63, 0.77, 0.92, 1)
+shader_parameter/turbidity = 10.0
+shader_parameter/sun_disk_scale = 1.0
+shader_parameter/ground_color = Color(1, 1, 1, 1)
+shader_parameter/exposure = 0.1
+shader_parameter/worlnoise = ExtResource("2")
+shader_parameter/perlworlnoise = ExtResource("3")
+shader_parameter/weathermap = ExtResource("4")
 
 [sub_resource type="Sky" id="Sky_m81e2"]
 sky_material = SubResource("ShaderMaterial_jcxn0")
