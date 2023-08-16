@@ -8,9 +8,9 @@ uniform sampler3D perlworlnoise : filter_linear_mipmap, repeat_enable;
 uniform sampler2D weathermap : filter_linear_mipmap, repeat_enable;
 
 uniform vec2 wind_direction = vec2(1, 0);
+uniform float wind_speed :hint_range(0.0, 20.0) = 1.0;
 uniform float _density : hint_range(0.01, 0.2) = 0.05;
 uniform float cloud_coverage :hint_range(0.1, 1.0) = 0.25;
-uniform float _time_scale :hint_range(0.0, 20.0) = 1.0;
 uniform float _time_offset : hint_range(0.0, 1000.0, 0.5) = 0.0;
 
 // Approximately earth sizes
@@ -140,7 +140,7 @@ float intersectSphere(vec3 pos, vec3 dir,float r) {
 // Returns density at a given point
 // Heavily based on method from Schneider
 float density(vec3 pip, vec3 weather, float mip) {
-	float time = TIME * _time_scale;
+	float time = TIME * wind_speed;
 	vec3 p = pip;
 	float height_fraction = GetHeightFractionForPoint(length(p));
 	p.xz += time * 20.0 * normalize(wind_direction) * 0.6;
@@ -181,7 +181,7 @@ vec4 march(vec3 pos,  vec3 end, vec3 dir, int depth) {
 	vec3 atmosphere_ground = atmosphere(normalize(vec3(1.0, -1.0, 0.0)));
 	
 	const float weather_scale = 0.00006;
-	float time = TIME * 0.001 * _time_scale + 0.005 * _time_offset;
+	float time = TIME * 0.001 * wind_speed + 0.005 * _time_offset;
 	vec2 weather_pos = time * normalize(wind_direction);
 	
 	for (int i = 0; i < depth; i++) {
