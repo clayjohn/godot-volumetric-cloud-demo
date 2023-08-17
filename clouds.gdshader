@@ -140,10 +140,10 @@ float intersectSphere(vec3 pos, vec3 dir,float r) {
 // Returns density at a given point
 // Heavily based on method from Schneider
 float density(vec3 pip, vec3 weather, float mip) {
-	float time = TIME * wind_speed;
+	float time = TIME;
 	vec3 p = pip;
 	float height_fraction = GetHeightFractionForPoint(length(p));
-	p.xz += time * 20.0 * normalize(wind_direction) * 0.6;
+	p.xz += time * 20.0 * normalize(wind_direction) * wind_speed * 0.6;
 	vec4 n = textureLod(perlworlnoise, p.xyz*0.00008, mip-2.0);
 	float fbm = n.g*0.625+n.b*0.25+n.a*0.125;
 	float g = densityHeightGradient(height_fraction, weather.r);
@@ -181,8 +181,8 @@ vec4 march(vec3 pos,  vec3 end, vec3 dir, int depth) {
 	vec3 atmosphere_ground = atmosphere(normalize(vec3(1.0, -1.0, 0.0)));
 	
 	const float weather_scale = 0.00006;
-	float time = TIME * 0.001 * wind_speed + 0.005 * _time_offset;
-	vec2 weather_pos = time * normalize(wind_direction);
+	float time = TIME * 0.001 + 0.005 * _time_offset;
+	vec2 weather_pos = time * normalize(wind_direction) * wind_speed;
 	
 	for (int i = 0; i < depth; i++) {
 		p += dir * ss;
