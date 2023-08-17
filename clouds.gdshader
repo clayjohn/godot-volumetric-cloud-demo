@@ -151,6 +151,8 @@ float density(vec3 pip, vec3 weather, float mip) {
 	float weather_coverage = cloud_coverage*weather.b;
 	base_cloud = remap(base_cloud*g, 1.0-(weather_coverage), 1.0, 0.0, 1.0);
 	base_cloud *= weather_coverage;
+	p.xz -= time * normalize(wind_direction) * 40.;
+	p.y -= time * 40.;
 	vec3 hn = textureLod(worlnoise, p*0.001, mip).rgb;
 	float hfbm = hn.r*0.625+hn.g*0.25+hn.b*0.125;
 	hfbm = mix(hfbm, 1.0-hfbm, clamp(height_fraction*4.0, 0.0, 1.0));
