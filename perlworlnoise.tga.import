@@ -3,22 +3,23 @@
 importer="3d_texture"
 type="CompressedTexture3D"
 uid="uid://dbfbysid168mx"
-path="res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.ctex3d"
+path.bptc="res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.bptc.ctex3d"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://perlworlnoise.tga"
-dest_files=["res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.ctex3d"]
+dest_files=["res://.godot/imported/perlworlnoise.tga-abc9a05913ea8595ad4b456396e60db4.bptc.ctex3d"]
 
 [params]
 
-compress/mode=3
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
